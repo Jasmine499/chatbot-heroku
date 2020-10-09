@@ -9,6 +9,7 @@
     <div>
       <div id="chatbox">
         <p class="botText"><span>Hi! I'm Chatbot.</span></p>
+        <p class="botText"><span>Please enter your mail</span></p>
       </div>
       <div id="userInput">
         <input id="textInput" type="text" name="msg" placeholder="Message">
@@ -21,10 +22,18 @@
           $("#textInput").val("");
           $("#chatbox").append(userHtml);
           document.getElementById('userInput').scrollIntoView({block: 'start', behavior: 'smooth'});
-          $.get("/chat-nltk", { msg: rawText }).done(function(data) {
-            var botHtml = '<p class="botText"><span>' + data + '</span></p>';
-            $("#chatbox").append(botHtml);
+          $.get("/chatterbot", { msg: rawText }).done(function(data) {
+            if(data == 'Please select date & time') {
+              var botHtml =  `<p class="botText"><span> Please select date & time </span></p>' <input class="form-control" type="datetime-local" name="dateappt_tech" id="dateappt_tech">`
+              $("#chatbox").append(botHtml)
+            } else {
+              var botHtml = '<p class="botText"><span>' + data + '</span></p>';
+              $("#chatbox").append(botHtml)
+            }
             document.getElementById('userInput').scrollIntoView({block: 'start', behavior: 'smooth'});
+            $("input[name='dateappt_tech']").on("change", function () {
+              alert("Your meeting is scheduled at "+this.value);
+            });
           });
         }
         $("#textInput").keypress(function(e) {
