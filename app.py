@@ -10,7 +10,18 @@ app = Flask(__name__)
 
 model = pickle.load(open("nltk.pkl", 'rb'))
 
-english_bot = ChatBot("Chatterbot", storage_adapter='chatterbot.storage.SQLStorageAdapter')
+english_bot = ChatBot("Chatterbot", storage_adapter='chatterbot.storage.SQLStorageAdapter',
+                    logic_adapters=[
+                            'chatterbot.logic.MathematicalEvaluation',
+                            'chatterbot.logic.TimeLogicAdapter',
+                            'chatterbot.logic.BestMatch',
+                            {
+                                'import_path': 'chatterbot.logic.BestMatch',
+                                'default_response': 'I am sorry, but I do not understand. I am still learning.',
+                                'maximum_similarity_threshold': 0.90
+                            }
+                        ]
+                    )
 trainer = ChatterBotCorpusTrainer(english_bot)
 trainer.train("./greetings.yml")    
 
