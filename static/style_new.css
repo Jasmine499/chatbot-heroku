@@ -28,17 +28,36 @@
   }
   
   .msger {
-    display: flex;
+    /* display: flex;  
     flex-flow: column wrap;
-    justify-content: space-between;
-    width: 100%;
-    max-width: 867px;
+    justify-content: space-between; */
+    width: 370px;
     margin: 25px 10px;
     height: calc(100% - 50px);
     border: var(--border);
     border-radius: 5px;
     background: var(--msger-bg);
     box-shadow: 0 15px 15px -5px rgba(0, 0, 0, 0.2);
+    display: none;
+    position: fixed;
+    bottom: 0px;
+    height: 500px;
+    right: 15px;
+    border: 3px solid #f1f1f1;
+    z-index: 9;
+  }
+
+  .open-button {
+    background-color: #555;
+    color: white;
+    padding: 16px 20px;
+    border: none;
+    cursor: pointer;
+    opacity: 0.8;
+    position: fixed;
+    bottom: 23px;
+    right: 28px;
+    width: 280px;
   }
   
   .msger-header {
@@ -55,7 +74,10 @@
   .msger-chat {
     flex: 1;
     overflow-y: auto;
+    display: inline-block;
     padding: 10px;
+    height: calc(100% - 150px);
+
   }
   .msger-chat::-webkit-scrollbar {
     width: 6px;
@@ -119,6 +141,7 @@
   }
   
   .msger-inputarea {
+    width: 370px;
     display: flex;
     padding: 10px;
     border-top: var(--border);
@@ -156,6 +179,16 @@
   }
   .options {
     text-align: left;
+    width:370px;
+    height: 60px;
+    overflow: hidden;
+  }
+
+  .option {
+    white-space:nowrap;
+    overflow-x: scroll;
+    overflow-y: hide;
+	  -webkit-overflow-scrolling:touch;
   }
   .option-btn {
     margin-bottom: 0;
@@ -171,3 +204,37 @@
     border: 1px solid transparent !important;
     outline: none;
   }
+
+/* ::-webkit-scrollbar {
+    width: 2em;
+    height: 1em
+}
+::-webkit-scrollbar-button {
+    background: #ccc
+}
+::-webkit-scrollbar-track-piece {
+    background: #888
+}
+::-webkit-scrollbar-thumb {
+    background: #eee
+} */
+
+/* width */
+::-webkit-scrollbar {
+  width: 3px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1; 
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #888; 
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555; 
+}

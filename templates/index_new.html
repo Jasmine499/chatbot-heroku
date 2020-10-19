@@ -25,7 +25,8 @@
 
   </script>
   <!-- partial:index.partial.html -->
-  <section class="msger">
+  <button class="open-button" id="openBtn" onclick="openForm()">Chat</button>
+  <section class="msger" id="myForm">
     <header class="msger-header">
       <div class="msger-header-title">
         <img class="msger-header-icon" src="{{url_for('static', filename='images/xAmplify.png')}}"/>
@@ -47,10 +48,13 @@
       </div>
     </main>
     <div class="options">
-      <button value="xAmplify" class="option-btn">xAmplify</button>
-      <button value="Features"class="option-btn">Features</button>
-      <button value="TCMA"class="option-btn">TCMA</button>
-      <button value="Request for demo"class="option-btn">Request for demo</button>
+      <div class="option">
+        <button value="xAmplify" class="option-btn">xAmplify</button>
+        <button value="Features"class="option-btn">Features</button>
+        <button value="TCMA"class="option-btn">TCMA</button>
+        <button value="Request for demo"class="option-btn">Request for demo</button>
+      </div>
+      
     </div>
     <form class="msger-inputarea">
       <input type="text" class="msger-input" id="textInput" autocomplete="off" placeholder="Enter your message...">
@@ -60,6 +64,12 @@
   <!-- partial -->
   <script src='https://use.fontawesome.com/releases/v5.0.13/js/all.js'></script>
   <script>
+
+  function openForm() {
+    document.getElementById("myForm").style.display = "block";
+    document.getElementById("openBtn").style.display = "none";
+    
+  }
 
     const msgerForm = get(".msger-inputarea");
     const msgerInput = get(".msger-input");
