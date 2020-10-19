@@ -30,8 +30,9 @@
     <header class="msger-header">
       <div class="msger-header-title">
         <img class="msger-header-icon" src="{{url_for('static', filename='images/xAmplify.png')}}"/>
-           CHATBOT
-      </div>
+        <span> CHATBOT </span>
+        <i class="msger-header-closeicon far fa-times-circle" onclick="closeForm()"></i>
+    </div>
     </header>
     <main class="msger-chat">
       <div class="msg left-msg">
@@ -71,6 +72,11 @@
     
   }
 
+  function closeForm() {
+    document.getElementById("myForm").style.display = "none";
+    document.getElementById("openBtn").style.display = "block";
+    
+  }
     const msgerForm = get(".msger-inputarea");
     const msgerInput = get(".msger-input");
     const msgerChat = get(".msger-chat");

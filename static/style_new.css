@@ -31,17 +31,16 @@
     /* display: flex;  
     flex-flow: column wrap;
     justify-content: space-between; */
-    width: 370px;
+    width: 450px;
     margin: 25px 10px;
-    height: calc(100% - 50px);
+    height: calc(100% - 150px);
     border: var(--border);
     border-radius: 5px;
     background: var(--msger-bg);
     box-shadow: 0 15px 15px -5px rgba(0, 0, 0, 0.2);
     display: none;
     position: fixed;
-    bottom: 0px;
-    height: 500px;
+    bottom: 30px;
     right: 15px;
     border: 3px solid #f1f1f1;
     z-index: 9;
@@ -141,7 +140,7 @@
   }
   
   .msger-inputarea {
-    width: 370px;
+    width: 450px;
     display: flex;
     padding: 10px;
     border-top: var(--border);
@@ -177,9 +176,16 @@
   .msger-header-icon {
     float: left
   }
+      
+  .msger-header-title {
+    height: 35px;
+  }
+  .msger-header-closeicon {
+    float: right
+  }
   .options {
     text-align: left;
-    width:370px;
+    width:450px;
     height: 60px;
     overflow: hidden;
   }
