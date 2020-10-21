@@ -4,13 +4,14 @@ from chatterbot.trainers import ChatterBotCorpusTrainer
 import pickle
 import psycopg2
 import re
+from jira.client import JIRA
 
 
 app = Flask(__name__)
 
 model = pickle.load(open("nltk.pkl", 'rb'))
 
-english_bot = ChatBot("Chatterbot", storage_adapter='chatterbot.storage.SQLStorageAdapter',
+english_bot = ChatBot("Chatterbot",
                     logic_adapters=[
                             'chatterbot.logic.MathematicalEvaluation',
                             'chatterbot.logic.TimeLogicAdapter',
@@ -67,6 +68,17 @@ def get_bot_response():
     conn.close()
     return res
 
+@app.route("/createjira")
+def create_jira():
+    print("############################################")
+    summaryText=request.args.get('summary')
+    descriptionText=request.args.get('description')
+    jira=JIRA(basic_auth=('dtejashwini@stratapps.com','0DoVu9iM9acCZ795ngv20AEC'),
+    options={'headers': {'content-type': 'application/json'},'server': 'https://xamplify.atlassian.net/'})
+    new_issue = jira.create_issue(project={'key': 'XBI'}, summary= summaryText,   description=descriptionText, issuetype={'name': 'Bug'})
+    print(new_issue)
+    return str(new_issue)
+    
 @app.route("/chat-nltk")
 def get_response():
     userText = request.args.get('msg')

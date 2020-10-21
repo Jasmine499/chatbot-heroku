@@ -18,9 +18,18 @@
  
   <script>
     function formatDate_New(date) {
-      const h = "0" + date.getHours();
-      const m = "0" + date.getMinutes();
-      document.write(`${h.slice(-2)}:${m.slice(-2)}`);
+      // const h = "0" + date.getHours();
+      // const m = "0" + date.getMinutes();
+      // document.write(`${h.slice(-2)}:${m.slice(-2)}`);
+      var date = new Date();
+      var hours = date.getHours();
+      var minutes = date.getMinutes();
+      var ampm = hours >= 12 ? 'PM' : 'AM';
+      hours = hours % 12;
+      hours = hours ? hours : 12; // the hour '0' should be '12'
+      minutes = minutes < 10 ? '0'+minutes : minutes;
+      var strTime = hours + ':' + minutes + ' ' + ampm;
+      document.write( strTime)
     }
 
   </script>
@@ -54,8 +63,30 @@
         <button value="Features"class="option-btn">Features</button>
         <button value="TCMA"class="option-btn">TCMA</button>
         <button value="Request for demo"class="option-btn">Request for demo</button>
+        <button value="Create Issue" class="option-btn" id="myBtn">Create Issue</button>
+        <!-- Trigger/Open The Modal -->
       </div>
       
+    </div>
+    <!-- The Modal -->
+    <div id="myModal" class="modal">
+
+      <!-- Modal content -->
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <form >
+          <label for="fname">First Name</label>
+          <input class="modal-input-form" type="text" id="fname" name="firstname" placeholder="Your name..">
+          <label for="lname">Last Name</label>
+          <input class="modal-input-form" type="text" id="lname" name="lastname" placeholder="Your last name..">
+          <label for="summ">Summary</label>
+          <input class="modal-input-form" type="text" id="summ" name="Summary" placeholder="Write..">
+          <label for="desc">Description</label>
+          <input class="modal-input-form" type="text" id="desc" name="Description" placeholder="Write..">
+          <input class="modal-input-form" type="button" id="subbtn" value="Submit">
+        </form>
+      </div>
+    
     </div>
     <form class="msger-inputarea">
       <input type="text" class="msger-input" id="textInput" autocomplete="off" placeholder="Enter your message...">
@@ -64,7 +95,25 @@
   </section>
   <!-- partial -->
   <script src='https://use.fontawesome.com/releases/v5.0.13/js/all.js'></script>
+
   <script>
+    // Get the modal
+    var modal = document.getElementById("myModal");
+    
+    // Get the <span> element that closes the modal
+    var span = document.getElementsByClassName("close")[0];
+  
+    // When the user clicks on <span> (x), close the modal
+    span.onclick = function() {
+      modal.style.display = "none";
+    }
+    
+    // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function(event) {
+      if (event.target == modal) {
+        modal.style.display = "none";
+      }
+    }
 
   function openForm() {
     document.getElementById("myForm").style.display = "block";
@@ -99,12 +148,32 @@
         } else if(event.target.value == "Request for demo"){
           msgText = 'Please schedule a meeting'
           // window.open('https://calendly.com/kjasmine/xamplify-demo','_blank');
+        } else if(event.target.value == "Create Issue") {
+          modal.style.display = "block";
         }
           
-        event.preventDefault();
-        appendMessage(PERSON_NAME, PERSON_IMG, "right", msgText);
-        msgerInput.value = "";
-        botResponse(msgText);
+        if(event.target.value != "Create Issue") {
+          event.preventDefault();
+          appendMessage(PERSON_NAME, PERSON_IMG, "right", msgText);
+          msgerInput.value = "";
+          botResponse(msgText);
+        }
+        
+    });
+    
+    $("#subbtn").click(function() {
+      const frstname = get("#fname").value;
+      const lstname = get("#lname").value;
+      const summry = get("#summ").value;
+      const descr = get("#desc").value;
+      $.get("/createjira", { summary: summry,description: descr}).done(function (data) {
+        if(data.includes('XBI')){
+          appendMessage(BOT_NAME, BOT_IMG, "left", 'Issue is created on your behalf');
+        }
+        modal.style.display = "none"
+      });
+  
+      console.log("submitclick",frstname,)
     });
 
     msgerForm.addEventListener("submit", event => {
@@ -176,9 +245,18 @@
     }
 
     function formatDate(date) {
-      const h = "0" + date.getHours();
-      const m = "0" + date.getMinutes();
-      return `${h.slice(-2)}:${m.slice(-2)}`;
+      // const h = "0" + date.getHours();
+      // const m = "0" + date.getMinutes();
+      // return `${h.slice(-2)}:${m.slice(-2)}`;
+      var date = new Date();
+      var hours = date.getHours();
+      var minutes = date.getMinutes();
+      var ampm = hours >= 12 ? 'PM' : 'AM';
+      hours = hours % 12;
+      hours = hours ? hours : 12; // the hour '0' should be '12'
+      minutes = minutes < 10 ? '0'+minutes : minutes;
+      var strTime = hours + ':' + minutes + ' ' + ampm;
+      return strTime;
     }
 
   </script>
@@ -191,8 +269,8 @@
       window.addEventListener(
         'message',
         function(e) {
+          console.log("event", e);
           if (isCalendlyEvent(e)) {
-            console.log("event", e);
             appendMessage(BOT_NAME, BOT_IMG, "left", "Event has been scheduled, Please check your mail for details");
           }
         }
