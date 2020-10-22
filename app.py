@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request,session
 from chatterbot import ChatBot
 from chatterbot.trainers import ChatterBotCorpusTrainer
 import pickle
@@ -12,6 +12,7 @@ import threading
 
 app = Flask(__name__)
 app.testing = False
+app.secret_key = 'super secret key'
 
 app.config['MAIL_SERVER']='smtp.gmail.com'
 app.config['MAIL_PORT'] = 465
@@ -41,18 +42,15 @@ trainer = ChatterBotCorpusTrainer(english_bot)
 trainer.train("./greetings.yml")    
 
 regex = '^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$' 
-mail_id = None  
-count = 0 
+
 
 @app.route("/")
 def home():
-    global count
-    count = 0
+    session['mail_id'] = ''
+    session['count'] = 0
     return render_template("index_new.html")
 
-def increment(num):
-    global count
-    count = num + 1 
+
 
 def send_async_email(app, msg):
     with app.app_context():
@@ -73,22 +71,21 @@ def get_bot_response():
     print(request)
     userText = request.args.get('msg')
 
-    global count
-    global mail_id
-    print(count, re.search(regex,userText))
-    if(count == 0 and re.search(regex,userText)):
-        print("mail id")
-        mail_id = userText 
-        increment(count)
+    
+    print(session,session['count'], re.search(regex,userText))
+    if(session['count'] == 0 and re.search(regex,userText)):
+        print("mail id is entered")
+        session['mail_id'] = userText 
+        session['count'] = 1
         return 'Thanks, how can I help you?'
-    elif(count == 0 and re.search(regex,userText) == None):
+    elif(session['count'] == 0 and re.search(regex,userText) == None):
         return 'Please enter valid email id'
 
     conn = psycopg2.connect(database="chatbotdb", user = "postgres", password = "postgres", host = 'localhost', port = "5432")
     res = str(english_bot.get_response(userText))
     cursor = conn.cursor()
-    s= cursor.execute("INSERT INTO chathistry (user_mail_id,text,search_txt,persona,created_at) VALUES(%s, %s, %s, %s, now())", (mail_id, userText, userText, 'human', ))
-    s= cursor.execute("INSERT INTO chathistry (user_mail_id,text,resp_txt,persona,created_at) VALUES(%s, %s, %s, %s, now()) ", (mail_id, res, res, 'bot', ))
+    s= cursor.execute("INSERT INTO chathistry (user_mail_id,text,search_txt,persona,created_at) VALUES(%s, %s, %s, %s, now())", (session['mail_id'], userText, userText, 'human', ))
+    s= cursor.execute("INSERT INTO chathistry (user_mail_id,text,resp_txt,persona,created_at) VALUES(%s, %s, %s, %s, now()) ", (session['mail_id'], res, res, 'bot', ))
     print('s',s)
     conn.commit() 
     cursor.close()
