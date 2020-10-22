@@ -5,10 +5,24 @@ import pickle
 import psycopg2
 import re
 from jira.client import JIRA
-
+from flask import current_app
+from flask_mail import Mail
+from flask_mail import Message
+import threading
 
 app = Flask(__name__)
+app.testing = False
 
+app.config['MAIL_SERVER']='smtp.gmail.com'
+app.config['MAIL_PORT'] = 465
+app.config['MAIL_USERNAME'] = 'sajasmine175@gmail.com'
+app.config['MAIL_PASSWORD'] = 'stratapps'
+app.config['MAIL_USE_TLS'] = False
+app.config['MAIL_USE_SSL'] = True
+app.config['MAIL_DEFAULT_SENDER'] = 'sajasmine175@gmail.com'
+app.config['MAIL_ASCII_ATTACHMENTS'] = True
+app.config['DEBUG'] = True
+mail = Mail(app)
 model = pickle.load(open("nltk.pkl", 'rb'))
 
 english_bot = ChatBot("Chatterbot",
@@ -40,6 +54,19 @@ def increment(num):
     global count
     count = num + 1 
 
+def send_async_email(app, msg):
+    with app.app_context():
+        mail.send(msg) 
+        print ("sent")
+
+def send_email(id, to):
+    app = current_app._get_current_object()
+    msg = Message(subject='hello',
+                  sender='sajasmine175@gmail.com', recipients=to)
+    msg.body = "Issue has been created and jira id is "+str(id)
+    thr = threading.Thread(target=send_async_email, args=[app, msg])
+    thr.start()
+    return thr
 
 @app.route("/chatterbot")
 def get_bot_response():
@@ -77,6 +104,7 @@ def create_jira():
     options={'headers': {'content-type': 'application/json'},'server': 'https://xamplify.atlassian.net/'})
     new_issue = jira.create_issue(project={'key': 'XBI'}, summary= summaryText,   description=descriptionText, issuetype={'name': 'Bug'})
     print(new_issue)
+    send_email(new_issue, ['graghavendra@stratapps.com','kjasmine@stratapps.com'])
     return str(new_issue)
     
 @app.route("/chat-nltk")

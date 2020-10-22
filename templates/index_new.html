@@ -168,7 +168,7 @@
       const descr = get("#desc").value;
       $.get("/createjira", { summary: summry,description: descr}).done(function (data) {
         if(data.includes('XBI')){
-          appendMessage(BOT_NAME, BOT_IMG, "left", 'Issue is created on your behalf');
+          appendMessage(BOT_NAME, BOT_IMG, "left", 'Your ticket no '+ data+' is created');
         }
         modal.style.display = "none"
       });

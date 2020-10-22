@@ -49,6 +49,26 @@ set_pairs = [
         ['Bye, take care. See you soon :) ',
             'It was nice talking to you. See you soon :)']
     ],
+    [
+        'Please schedule a meeting',
+         ['calendly',]
+    ],
+    [
+         'What is xAmplify?',
+         ['xAmplify is an industry-first, GDPR/CCPA-ready, through-channel marketing automation platform.',]
+    ],
+    [
+         'What is TCMA?',
+         ['Through-Channel Marketing Automation (TCMA) is technology.',]
+    ],
+    [
+         'Features of xAmplify?',
+         ['Co-branding event marketing, Automatic co-branding, Forms and landing pages.',]     
+    ],
+    [
+        'What xAmplify does?',
+        ['With xAmplify Sail, we’re your end-to-end channel marketing team.',]
+    ],
 ]
 my_reflections =  {'i am': 'you are',
      'i was': 'you were',
