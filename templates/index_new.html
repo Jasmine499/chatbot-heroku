@@ -59,9 +59,9 @@
     </main>
     <div class="options">
       <div class="option">
-        <button value="xAmplify" class="option-btn">xAmplify</button>
+        <!-- <button value="xAmplify" class="option-btn">xAmplify</button>
         <button value="Features"class="option-btn">Features</button>
-        <button value="TCMA"class="option-btn">TCMA</button>
+        <button value="TCMA"class="option-btn">TCMA</button> -->
         <button value="Request for demo"class="option-btn">Request for demo</button>
         <button value="Create Issue" class="option-btn" id="myBtn">Create Issue</button>
         <!-- Trigger/Open The Modal -->
@@ -77,8 +77,8 @@
         <form >
           <label for="fname">First Name</label>
           <input class="modal-input-form" type="text" id="fname" name="firstname" placeholder="Your name..">
-          <label for="lname">Last Name</label>
-          <input class="modal-input-form" type="text" id="lname" name="lastname" placeholder="Your last name..">
+          <label for="lname">Email id</label>
+          <input class="modal-input-form" type="text" id="emlid" name="emailid" placeholder="Your emailid here..">
           <label for="summ">Summary</label>
           <input class="modal-input-form" type="text" id="summ" name="Summary" placeholder="Write..">
           <label for="desc">Description</label>
@@ -139,13 +139,13 @@
     $(".option-btn").click(function() {
         console.log(event.target.value)
         var msgText;
-        if(event.target.value == "xAmplify") {
-          msgText = "What is xAmplify?";
-        } else if(event.target.value == "Features") {
-          msgText = "Features of xAmplify?";
-        } else if(event.target.value == "TCMA") {
-          msgText = "What is TCMA?";
-        } else if(event.target.value == "Request for demo"){
+        // if(event.target.value == "xAmplify") {
+        //   msgText = "What is xAmplify?";
+        // } else if(event.target.value == "Features") {
+        //   msgText = "Features of xAmplify?";
+        // } else if(event.target.value == "TCMA") {
+        //   msgText = "What is TCMA?";
+        if(event.target.value == "Request for demo"){
           msgText = 'Please schedule a meeting'
           // window.open('https://calendly.com/kjasmine/xamplify-demo','_blank');
         } else if(event.target.value == "Create Issue") {
@@ -162,18 +162,22 @@
     });
     
     $("#subbtn").click(function() {
-      const frstname = get("#fname").value;
-      const lstname = get("#lname").value;
-      const summry = get("#summ").value;
-      const descr = get("#desc").value;
-      $.get("/createjira", { summary: summry,description: descr}).done(function (data) {
-        if(data.includes('XBI')){
-          appendMessage(BOT_NAME, BOT_IMG, "left", 'Your ticket no '+ data+' is created');
-        }
-        modal.style.display = "none"
+      const emid = get("#emlid").value;
+      var patt = new RegExp('^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$');
+      var pattRes = patt.test(emid);
+      if (pattRes) {
+        const frstname = get("#fname").value;
+        const summry = get("#summ").value;
+        const descr = get("#desc").value;
+        $.get("/createjira", { summary: summry,description: descr,emailid: emid }).done(function (data) {
+          if(data.includes('XBI')){
+            appendMessage(BOT_NAME, BOT_IMG, "left", 'Your ticket no '+ data+' is created');
+          }
+          modal.style.display = "none"
       });
-  
-      console.log("submitclick",frstname,)
+      } else{
+        alert("Please enter valid email id")
+      }
     });
 
     msgerForm.addEventListener("submit", event => {
