@@ -163,8 +163,9 @@
     
     $("#subbtn").click(function() {
       const emid = get("#emlid").value;
-      var patt = new RegExp('^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$');
+      var patt = /^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$/;
       var pattRes = patt.test(emid);
+      console.log("pattRes",pattRes);
       if (pattRes) {
         const frstname = get("#fname").value;
         const summry = get("#summ").value;

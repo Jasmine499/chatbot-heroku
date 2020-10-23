@@ -9,6 +9,7 @@ from flask import current_app
 from flask_mail import Mail
 from flask_mail import Message
 import threading
+import datetime
 
 app = Flask(__name__)
 app.testing = False
@@ -70,6 +71,7 @@ def send_email(id, to):
 def get_bot_response():
     print(request)
     userText = request.args.get('msg')
+    ts = datetime.datetime.now()
 
     
     print(session,session['count'], re.search(regex,userText))
@@ -84,8 +86,8 @@ def get_bot_response():
     conn = psycopg2.connect(database="chatbotdb", user = "postgres", password = "postgres", host = 'localhost', port = "5432")
     res = str(english_bot.get_response(userText))
     cursor = conn.cursor()
-    s= cursor.execute("INSERT INTO chathistry (user_mail_id,text,search_txt,persona,created_at) VALUES(%s, %s, %s, %s, now())", (session['mail_id'], userText, userText, 'human', ))
-    s= cursor.execute("INSERT INTO chathistry (user_mail_id,text,resp_txt,persona,created_at) VALUES(%s, %s, %s, %s, now()) ", (session['mail_id'], res, res, 'bot', ))
+    s= cursor.execute("INSERT INTO chathistry (user_mail_id,text,search_txt,persona,created_at) VALUES(%s, %s, %s, %s, now())", (session['mail_id'], userText, userText, 'human', ts))
+    s= cursor.execute("INSERT INTO chathistry (user_mail_id,text,resp_txt,persona,created_at) VALUES(%s, %s, %s, %s, now()) ", (session['mail_id'], res, res, 'bot',ts ))
     print('s',s)
     conn.commit() 
     cursor.close()
@@ -102,7 +104,7 @@ def create_jira():
     options={'headers': {'content-type': 'application/json'},'server': 'https://xamplify.atlassian.net/'})
     new_issue = jira.create_issue(project={'key': 'XBI'}, summary= summaryText,   description=descriptionText, issuetype={'name': 'Bug'})
     print(new_issue)
-    send_email(new_issue, ['graghavendra@stratapps.com' 'kjasmine@stratapps.com', emailidText])
+    send_email(new_issue, ['graghavendra@stratapps.com' ,'kjasmine@stratapps.com', emailidText])
     return str(new_issue)
     
 @app.route("/chat-nltk")
