@@ -63,7 +63,7 @@
         <button value="Features"class="option-btn">Features</button>
         <button value="TCMA"class="option-btn">TCMA</button> -->
         <button value="Request for demo"class="option-btn">Request for demo</button>
-        <button value="Create Issue" class="option-btn" id="myBtn">Create Issue</button>
+        <button value="Raise an issue" class="option-btn" id="myBtn">Raise an issue</button>
         <!-- Trigger/Open The Modal -->
       </div>
       
@@ -75,9 +75,9 @@
       <div class="modal-content">
         <span class="close">&times;</span>
         <form >
-          <label for="fname">First Name</label>
+          <label for="fname">Full Name</label>
           <input class="modal-input-form" type="text" id="fname" name="firstname" placeholder="Your name..">
-          <label for="lname">Email id</label>
+          <label for="lname">Email ID</label>
           <input class="modal-input-form" type="text" id="emlid" name="emailid" placeholder="Your emailid here..">
           <label for="summ">Summary</label>
           <input class="modal-input-form" type="text" id="summ" name="Summary" placeholder="Write..">
@@ -148,11 +148,11 @@
         if(event.target.value == "Request for demo"){
           msgText = 'Please schedule a meeting'
           // window.open('https://calendly.com/kjasmine/xamplify-demo','_blank');
-        } else if(event.target.value == "Create Issue") {
+        } else if(event.target.value == "Raise an issue") {
           modal.style.display = "block";
         }
           
-        if(event.target.value != "Create Issue") {
+        if(event.target.value != "Raise an issue") {
           event.preventDefault();
           appendMessage(PERSON_NAME, PERSON_IMG, "right", msgText);
           msgerInput.value = "";
@@ -172,7 +172,7 @@
         const descr = get("#desc").value;
         $.get("/createjira", { summary: summry,description: descr,emailid: emid }).done(function (data) {
           if(data.includes('XBI')){
-            appendMessage(BOT_NAME, BOT_IMG, "left", 'Your ticket no '+ data+' is created');
+            appendMessage(BOT_NAME, BOT_IMG, "left", 'Your ticket no '+ data+' is created. Our support team will get back you.');
           }
           modal.style.display = "none"
       });

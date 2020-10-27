@@ -62,7 +62,7 @@ def send_email(sub,id, to):
     app = current_app._get_current_object()
     msg = Message(subject=sub,
                   sender='sajasmine175@gmail.com', recipients=to)
-    msg.body = "Issue has been created and jira id is "+str(id)
+    msg.html=render_template('mail_content.html', issueLink='https://xamplify.atlassian.net/browse/'+str(id))
     thr = threading.Thread(target=send_async_email, args=[app, msg])
     thr.start()
     return thr
@@ -86,8 +86,8 @@ def get_bot_response():
     conn = psycopg2.connect(database="chatbotdb", user = "postgres", password = "postgres", host = 'localhost', port = "5432")
     res = str(english_bot.get_response(userText))
     cursor = conn.cursor()
-    s= cursor.execute("INSERT INTO chathistry (user_mail_id,text,search_txt,persona,created_at) VALUES(%s, %s, %s, %s, now())", (session['mail_id'], userText, userText, 'human', ts))
-    s= cursor.execute("INSERT INTO chathistry (user_mail_id,text,resp_txt,persona,created_at) VALUES(%s, %s, %s, %s, now()) ", (session['mail_id'], res, res, 'bot',ts ))
+    s= cursor.execute("INSERT INTO chathistry (user_mail_id,text,search_txt,persona,created_at) VALUES(%s, %s, %s, %s, %s)", (session['mail_id'], userText, userText, 'human', ts))
+    s= cursor.execute("INSERT INTO chathistry (user_mail_id,text,resp_txt,persona,created_at) VALUES(%s, %s, %s, %s, %s) ", (session['mail_id'], res, res, 'bot',ts ))
     print('s',s)
     conn.commit() 
     cursor.close()
