@@ -3,72 +3,150 @@ from nltk.chat.util import Chat, reflections
 import pickle
 
 set_pairs = [
+  [
+    "my name is (.*)",
     [
-        'my name is (.*)',
-        ['Hello %1, How are you doing today ?', ]
-    ],
+      "Hello %1, How are you today ?",
+      
+    ]
+  ],
+  [
+    "what is your name ?",
     [
-        'hi|hey|hello',
-        ['Hello', 'Hey there', ]
-    ],
+      "My name is Chatty and I'm a chatbot ?",
+      
+    ]
+  ],
+  [
+    "how are you ?",
     [
-        'what is your name?',
-        ['You can call me a chatbot ?', ]
-    ],
+      "I'm doing good\nHow about You ?",
+      
+    ]
+  ],
+  [
+    "sorry (.*)",
     [
-        'how are you ?',
-        ['I am fine, thank you! How can i help you?', ]
-    ],
+      "Its alright",
+      "Its OK, never mind",
+      
+    ]
+  ],
+  [
+    "i'm (.*) doing good",
     [
-        'I am fine, thank you',
-        ['great to hear that, how can i help you?', ]
-    ],
+      "Nice to hear that",
+      "Alright :)",
+      
+    ]
+  ],
+  [
+    "hi|hey|hello",
     [
-        'how can i help you? ',
-        ['i am looking for online guides and courses to learn data science, can you suggest?',
-         'i am looking for data science training platforms', ]
-    ],
+      "Hello",
+      "Hey there",
+      
+    ]
+  ],
+  [
+    "(.*) age?",
     [
-        'im (.*) doing good',
-        ['Thats great to hear', 'How can i help you?:)', ]
-    ],
+      "I'm a computer program dude\nSeriously you are asking me this?",
+      
+    ]
+  ],
+  [
+    "what (.*) want ?",
     [
-        'i am looking for online guides and courses to learn data science, can you suggest?',
-        ['Pluralsight is a great option to learn data science. You can check their website', ]
-    ],
+      "Make me an offer I can't refuse",
+      
+    ]
+  ],
+  [
+    "(.*) created ?",
     [
-        'thanks for the suggestion. do they have great authors and instructors?',
-        ['Yes, they have the world class best authors, that is their strength;)', ]
-    ],
+      "Nagesh created me using Python's NLTK library ",
+      "top secret ;)",
+      
+    ]
+  ],
+  [
+    "(.*) (location|city) ?",
     [
-        '(.*) thank you so much, that was helpful',
-        ['Iam happy to help', 'No problem, you are welcome', ]
-    ],
+      'Chennai, Tamil Nadu',
+      
+    ]
+  ],
+  [
+    "how is weather in (.*)?",
     [
-        'quit',
-        ['Bye, take care. See you soon :) ',
-            'It was nice talking to you. See you soon :)']
-    ],
+      "Weather in %1 is awesome like always",
+      "Too hot man here in %1",
+      "Too cold man here in %1",
+      "Never even heard about %1"
+    ]
+  ],
+  [
+    "i work in (.*)?",
     [
-        'Please schedule a meeting',
-         ['calendly',]
-    ],
+      "%1 is an Amazing company, I have heard about it. But they are in huge loss these days.",
+      
+    ]
+  ],[
+    "(.*)raining in (.*)",
     [
-         'What is xAmplify?',
-         ['xAmplify is an industry-first, GDPR/CCPA-ready, through-channel marketing automation platform.',]
-    ],
+      "No rain since last week here in %2",
+      "Damn its raining too much here in %2"
+    ]
+  ],
+  [
+    "how (.*) health(.*)",
     [
-         'What is TCMA?',
-         ['Through-Channel Marketing Automation (TCMA) is technology.',]
-    ],
+      "I'm a computer program, so I'm always healthy ",
+      
+    ]
+  ],
+  [
+    "(.*) (sports|game) ?",
     [
-         'Features of xAmplify?',
-         ['Co-branding event marketing, Automatic co-branding, Forms and landing pages.',]     
-    ],
+      "I'm a very big fan of Football",
+      
+    ]
+  ],
+  [
+    "who (.*) sportsperson ?",
     [
-        'What xAmplify does?',
-        ['With xAmplify Sail, we’re your end-to-end channel marketing team.',]
-    ],
+      "Messy",
+      "Ronaldo",
+      "Roony"
+    ]
+  ],
+  [
+    "who (.*) (moviestar|actor)?",
+    [
+      "Brad Pitt"
+    ]
+  ],
+  [
+    "(.*) xAmplify",
+    [
+      "A new outbound Through Channel Marketing Automation platform that empowers you to deliver co-branded content through your channel partners"
+    ]
+  ],
+  [
+    "xAmplify (.*)",
+    [
+      "A new outbound Through Channel Marketing Automation platform that empowers you to deliver co-branded content through your channel partners"
+    ]
+  ],
+  [
+    "quit",
+    [
+      "BBye take care. See you soon :) ",
+      "It was nice talking to you. See you soon :)"
+    ]
+  ],
+  
 ]
 my_reflections =  {'i am': 'you are',
      'i was': 'you were',
