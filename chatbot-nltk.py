@@ -140,6 +140,12 @@ set_pairs = [
     ]
   ],
   [
+    "xAmplify",
+    [
+      "A new outbound Through Channel Marketing Automation platform that empowers you to deliver co-branded content through your channel partners"
+    ]
+  ],
+  [
     "quit",
     [
       "BBye take care. See you soon :) ",

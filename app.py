@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request,session
-import keras.backend.tensorflow_backend as tb
-tb._SYMBOLIC_SCOPE.value = True
+#import keras.backend.tensorflow_backend as tb
+#tb._SYMBOLIC_SCOPE.value = True
 # from chatterbot import ChatBot
 # from chatterbot.trainers import ChatterBotCorpusTrainer
 import pickle
@@ -19,13 +19,13 @@ lemmatizer = WordNetLemmatizer()
 import pickle
 import numpy as np
 
-from keras.models import load_model
-model = load_model('chatbot_model.h5')
-import json
-import random
-intents = json.loads(open('intents.json').read())
-words = pickle.load(open('words.pkl','rb'))
-classes = pickle.load(open('classes.pkl','rb'))
+# from keras.models import load_model
+# model = load_model('chatbot_model.h5')
+# import json
+# import random
+# intents = json.loads(open('intents.json').read())
+# words = pickle.load(open('words.pkl','rb'))
+# classes = pickle.load(open('classes.pkl','rb'))
 
 
 
@@ -69,67 +69,67 @@ def clean_up_sentence(sentence):
 
 # return bag of words array: 0 or 1 for each word in the bag that exists in the sentence
 
-def bow(sentence, words, show_details=True):
-    # tokenize the pattern
-    sentence_words = clean_up_sentence(sentence)
-    # bag of words - matrix of N words, vocabulary matrix
-    bag = [0]*len(words)
-    isFound = False
-    for s in sentence_words:
-        for i,w in enumerate(words):
-            if w == s: 
-                # assign 1 if current word is in the vocabulary position
-                bag[i] = 1
-                if show_details:
-                    isFound = True
-                    print ("found in bag: %s" % w)
-    if(isFound == True):
-        return (np.array(bag))
-    else:
-        return -1000
+# def bow(sentence, words, show_details=True):
+#     # tokenize the pattern
+#     sentence_words = clean_up_sentence(sentence)
+#     # bag of words - matrix of N words, vocabulary matrix
+#     bag = [0]*len(words)
+#     isFound = False
+#     for s in sentence_words:
+#         for i,w in enumerate(words):
+#             if w == s: 
+#                 # assign 1 if current word is in the vocabulary position
+#                 bag[i] = 1
+#                 if show_details:
+#                     isFound = True
+#                     print ("found in bag: %s" % w)
+#     if(isFound == True):
+#         return (np.array(bag))
+#     else:
+#         return -1000
 
-def predict_class(sentence, model):
-    # filter out predictions below a threshold
-    p = bow(sentence, words,show_details=True)
-    print('res', isinstance(p, np.ndarray),  p)
-    if(not isinstance(p, np.ndarray) and p == -1000):
-        return -1000
-    else:
-        res = model.predict(np.array([p]))[0]
+# def predict_class(sentence, model):
+#     # filter out predictions below a threshold
+#     p = bow(sentence, words,show_details=True)
+#     print('res', isinstance(p, np.ndarray),  p)
+#     if(not isinstance(p, np.ndarray) and p == -1000):
+#         return -1000
+#     else:
+#         res = model.predict(np.array([p]))[0]
         
-        ERROR_THRESHOLD = 0.25
-        results = [[i,r] for i,r in enumerate(res) if r>ERROR_THRESHOLD]
-        # sort by strength of probability
-        results.sort(key=lambda x: x[1], reverse=True)
-        return_list = []
-        for r in results:
-            return_list.append({"intent": classes[r[0]], "probability": str(r[1])})
-        return return_list
+#         ERROR_THRESHOLD = 0.25
+#         results = [[i,r] for i,r in enumerate(res) if r>ERROR_THRESHOLD]
+#         # sort by strength of probability
+#         results.sort(key=lambda x: x[1], reverse=True)
+#         return_list = []
+#         for r in results:
+#             return_list.append({"intent": classes[r[0]], "probability": str(r[1])})
+#         return return_list
 
-def getResponse(ints, intents_json):
-    if(ints == -1000):
-        tag = 'noanswer'
-        list_of_intents = intents_json['intents']
-        for i in list_of_intents:
-            if(i['tag']== tag):
-                result = random.choice(i['responses'])
-                break
-        return result
-    else:
-        tag = ints[0]['intent']
-        print('tag', tag)
-        list_of_intents = intents_json['intents']
-        for i in list_of_intents:
-            if(i['tag']== tag):
-                result = random.choice(i['responses'])
-                break
-        return result
+# def getResponse(ints, intents_json):
+#     if(ints == -1000):
+#         tag = 'noanswer'
+#         list_of_intents = intents_json['intents']
+#         for i in list_of_intents:
+#             if(i['tag']== tag):
+#                 result = random.choice(i['responses'])
+#                 break
+#         return result
+#     else:
+#         tag = ints[0]['intent']
+#         print('tag', tag)
+#         list_of_intents = intents_json['intents']
+#         for i in list_of_intents:
+#             if(i['tag']== tag):
+#                 result = random.choice(i['responses'])
+#                 break
+#         return result
 
-def chatbot_response(msg):
-    print('msg',msg)
-    ints = predict_class(msg, model)
-    res = getResponse(ints, intents)
-    return res
+# def chatbot_response(msg):
+#     print('msg',msg)
+#     ints = predict_class(msg, model)
+#     res = getResponse(ints, intents)
+#     return res
 
 @app.route("/")
 def home():
@@ -195,7 +195,28 @@ def create_jira():
 @app.route("/chat-nltk")
 def get_response():
     userText = request.args.get('msg')
-    return str(model_nltk.respond(userText))
+    ts = datetime.datetime.now()
+    print(session,session['count'], re.search(regex,userText))
+    if(session['count'] == 0 and re.search(regex,userText)):
+        print("mail id is entered")
+        session['mail_id'] = userText 
+        session['count'] = 1
+        return 'Thanks, how can I help you?'
+    elif(session['count'] == 0 and re.search(regex,userText) == None):
+        return 'Please enter valid email id'
+    res= str(model_nltk.respond(userText))
+    if(res == 'None'):
+        return 'Please provide more info'
+    else:
+        conn = psycopg2.connect(database="chatbotdb", user = "postgres", password = "postgres", host = 'localhost', port = "5432")
+        cursor = conn.cursor()
+        s= cursor.execute("INSERT INTO chathistry (user_mail_id,text,search_txt,persona,created_at) VALUES(%s, %s, %s, %s, %s)", (session['mail_id'], userText, userText, 'human', ts))
+        s= cursor.execute("INSERT INTO chathistry (user_mail_id,text,resp_txt,persona,created_at) VALUES(%s, %s, %s, %s, %s) ", (session['mail_id'], res, res, 'bot',ts ))
+        print('s',s)
+        conn.commit() 
+        cursor.close()
+        conn.close()
+        return res
 
 @app.route("/chat-dl")
 def get_response_dl():
