@@ -145,10 +145,58 @@ set_pairs = [
       "A new outbound Through Channel Marketing Automation platform that empowers you to deliver co-branded content through your channel partners"
     ]
   ],
+    [
+    "What is TCMA?",
+    [
+      "Through-Channel Marketing Automation (TCMA) is technology."
+    ]
+  ],
+  [
+    "TCMA (.*)",
+    [
+      "Through-Channel Marketing Automation (TCMA) is technology."
+    ]
+  ],
+  [
+    "(.*) TCMA",
+    [
+      "Through-Channel Marketing Automation (TCMA) is technology."
+    ]
+  ],
+  [
+    "TCMA",
+    [
+      "Through-Channel Marketing Automation (TCMA) is technology."
+    ]
+  ],
+  [
+    "Features of xAmplify?",
+    [
+      "Co-branding event marketing, Automatic co-branding, Forms and landing pages."
+    ]
+  ],
+   [
+    "What xAmplify does??",
+    [
+      "With xAmplify Sail, we’re your end-to-end channel marketing team."
+    ]
+  ],
+  [
+    "xAmplify features",
+    [
+      "Co-branding event marketing, Automatic co-branding, Forms and landing pages."
+    ]
+  ],
+   [
+    "Please schedule a meeting",
+    [
+      "calendly"
+    ]
+  ],
   [
     "quit",
     [
-      "BBye take care. See you soon :) ",
+      "Bye take care. See you soon :) ",
       "It was nice talking to you. See you soon :)"
     ]
   ],
