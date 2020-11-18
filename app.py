@@ -185,7 +185,7 @@ def create_jira():
     summaryText=request.args.get('summary')
     descriptionText=request.args.get('description')
     emailidText=request.args.get('emailid')
-    jira=JIRA(basic_auth=('dtejashwini@stratapps.com','0DoVu9iM9acCZ795ngv20AEC'),
+    jira=JIRA(basic_auth=('agayatri@stratapps.com','ECCxYPP8gydsLlXR9lMKEC40'),
     options={'headers': {'content-type': 'application/json'},'server': 'https://xamplify.atlassian.net/'})
     new_issue = jira.create_issue(project={'key': 'XBI'}, summary= summaryText,   description=descriptionText, issuetype={'name': 'Bug'})
     print(new_issue)
