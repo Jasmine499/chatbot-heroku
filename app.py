@@ -14,6 +14,7 @@ import threading
 import datetime
 
 import nltk
+from nltk.chat.util import Chat, reflections
 from nltk.stem import WordNetLemmatizer
 lemmatizer = WordNetLemmatizer()
 import pickle
@@ -21,7 +22,7 @@ import numpy as np
 
 # from keras.models import load_model
 # model = load_model('chatbot_model.h5')
-# import json
+import json
 # import random
 # intents = json.loads(open('intents.json').read())
 # words = pickle.load(open('words.pkl','rb'))
@@ -135,6 +136,7 @@ def clean_up_sentence(sentence):
 def home():
     session['mail_id'] = ''
     session['count'] = 0
+    session['name'] = ''
     return render_template("index_new.html")
 
 
@@ -197,13 +199,20 @@ def get_response():
     userText = request.args.get('msg')
     ts = datetime.datetime.now()
     print(session,session['count'], re.search(regex,userText))
-    if(session['count'] == 0 and re.search(regex,userText)):
+    if(session['count'] == 0 ):
         print("mail id is entered")
         session['mail_id'] = userText 
         session['count'] = 1
-        return 'Thanks, how can I help you?'
-    elif(session['count'] == 0 and re.search(regex,userText) == None):
+        return 'Hi! Before we get started I have a few questions for you. First, we’ll need your email address in case we need to follow up with you about your question INITIAL Please enter your email'
+    elif(session['count'] == 1 and re.search(regex,userText)):
+        session['count'] = 2
+        return 'Hi! My name is Jasmine, how can I help you today? INITIAL What is your name?'
+    elif(session['count'] == 1 and re.search(regex,userText) == None ):
         return 'Please enter valid email id'
+    elif(session['count'] == 2):
+        session['name'] = userText
+        return 'Welcome to xAmplify '+ userText+ ', how can we assist you today?'
+
     res= str(model_nltk.respond(userText))
     if(res == 'None'):
         return 'Please provide more info'
@@ -218,28 +227,47 @@ def get_response():
         conn.close()
         return res
 
-@app.route("/chat-dl")
-def get_response_dl():
-    userText = request.args.get('msg')
-    ts = datetime.datetime.now()
-    print(session,session['count'], re.search(regex,userText))
-    if(session['count'] == 0 and re.search(regex,userText)):
-        print("mail id is entered")
-        session['mail_id'] = userText 
-        session['count'] = 1
-        return 'Thanks, how can I help you?'
-    elif(session['count'] == 0 and re.search(regex,userText) == None):
-        return 'Please enter valid email id'
-    res= str(chatbot_response(userText))
-    conn = psycopg2.connect(database="chatbotdb", user = "postgres", password = "postgres", host = 'localhost', port = "5432")
-    cursor = conn.cursor()
-    s= cursor.execute("INSERT INTO chathistry (user_mail_id,text,search_txt,persona,created_at) VALUES(%s, %s, %s, %s, %s)", (session['mail_id'], userText, userText, 'human', ts))
-    s= cursor.execute("INSERT INTO chathistry (user_mail_id,text,resp_txt,persona,created_at) VALUES(%s, %s, %s, %s, %s) ", (session['mail_id'], res, res, 'bot',ts ))
-    print('s',s)
-    conn.commit() 
-    cursor.close()
-    conn.close()
-    return res
+# @app.route("/chat-dl")
+# def get_response_dl():
+#     userText = request.args.get('msg')
+#     ts = datetime.datetime.now()
+#     print(session,session['count'], re.search(regex,userText))
+#     if(session['count'] == 0 and re.search(regex,userText)):
+#         print("mail id is entered")
+#         session['mail_id'] = userText 
+#         session['count'] = 1
+#         return 'Thanks, how can I help you?'
+#     elif(session['count'] == 0 and re.search(regex,userText) == None):
+#         return 'Please enter valid email id'
+#     res= str(chatbot_response(userText))
+#     conn = psycopg2.connect(database="chatbotdb", user = "postgres", password = "postgres", host = 'localhost', port = "5432")
+#     cursor = conn.cursor()
+#     s= cursor.execute("INSERT INTO chathistry (user_mail_id,text,search_txt,persona,created_at) VALUES(%s, %s, %s, %s, %s)", (session['mail_id'], userText, userText, 'human', ts))
+#     s= cursor.execute("INSERT INTO chathistry (user_mail_id,text,resp_txt,persona,created_at) VALUES(%s, %s, %s, %s, %s) ", (session['mail_id'], res, res, 'bot',ts ))
+#     print('s',s)
+#     conn.commit() 
+#     cursor.close()
+#     conn.close()
+#     return res
+
+# @app.route("/get-intents")
+# def get_intents():
+#         data_file = open('intents.json').read()
+#         intents = json.loads(data_file)
+#         return intents
+
+# @app.route("/get-chats")
+# def get_chats():
+#         chat = Chat(set_pairs, reflections)
+#         str1=json.dumps(chat)
+#         str1
+#         # data_file = open('intents.json').read()
+#         # intents = json.loads(data_file)
+#         # return intents
+
+        
+#         # filename_model = 'nltk.pkl'
+#         # pickle.dump(chat, open(filename_model, 'wb'))
 
 
 if __name__ == '__main__':
