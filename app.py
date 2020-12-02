@@ -210,6 +210,7 @@ def get_response():
     elif(session['count'] == 1 and re.search(regex,userText) == None ):
         return 'Please enter valid email id'
     elif(session['count'] == 2):
+        session['count'] = 3
         session['name'] = userText
         return 'Welcome to xAmplify '+ userText+ ', how can we assist you today?'
 
