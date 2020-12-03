@@ -62,7 +62,9 @@
         <!-- <button value="xAmplify" class="option-btn">xAmplify</button>
         <button value="Features"class="option-btn">Features</button>
         <button value="TCMA"class="option-btn">TCMA</button> -->
-        <button value="Request for demo"class="option-btn">Request for demo</button>
+        <button value="Request for demo" class="option-btn" onclick="Calendly.initPopupWidget({url: 'https://calendly.com/kjasmine/xamplify-demo'});return false;">
+            Request for demo
+        </button>
         <button value="Raise an issue" class="option-btn" id="myBtn">Raise an issue</button>
         <!-- Trigger/Open The Modal -->
       </div>
@@ -145,14 +147,16 @@
         //   msgText = "Features of xAmplify?";
         // } else if(event.target.value == "TCMA") {
         //   msgText = "What is TCMA?";
-        if(event.target.value == "Request for demo"){
-          msgText = 'Please schedule a meeting'
-          // window.open('https://calendly.com/kjasmine/xamplify-demo','_blank');
-        } else if(event.target.value == "Raise an issue") {
+        // if(event.target.value == "Request for demo"){
+        //   msgText = 'Please schedule a meeting'
+        //   // window.open('https://calendly.com/kjasmine/xamplify-demo','_blank');
+        // } else
+        
+         if(event.target.value == "Raise an issue") {
           modal.style.display = "block";
         }
           
-        if(event.target.value != "Raise an issue") {
+        if(event.target.value != "Request for demo" && event.target.value != "Raise an issue") {
           event.preventDefault();
           appendMessage(PERSON_NAME, PERSON_IMG, "right", msgText);
           msgerInput.value = "";
