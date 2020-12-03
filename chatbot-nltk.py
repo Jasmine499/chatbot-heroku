@@ -130,19 +130,19 @@ set_pairs = [
   [
     "(.*) xAmplify",
     [
-      "A new outbound Through Channel Marketing Automation platform that empowers you to deliver co-branded content through your channel partners"
+      "[Show Video][SPLIT_VIDEO]A new outbound Through Channel Marketing Automation platform that empowers you to deliver co-branded content through your channel partners"
     ]
   ],
   [
     "xAmplify (.*)",
     [
-      "A new outbound Through Channel Marketing Automation platform that empowers you to deliver co-branded content through your channel partners"
+      "[Show Video][SPLIT_VIDEO]A new outbound Through Channel Marketing Automation platform that empowers you to deliver co-branded content through your channel partners"
     ]
   ],
   [
     "xAmplify",
     [
-      "A new outbound Through Channel Marketing Automation platform that empowers you to deliver co-branded content through your channel partners"
+      "[Show Video][SPLIT_VIDEO]A new outbound Through Channel Marketing Automation platform that empowers you to deliver co-branded content through your channel partners"
     ]
   ],
     [

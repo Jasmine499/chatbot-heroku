@@ -11,11 +11,11 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   <link href="https://assets.calendly.com/assets/external/widget.css" rel="stylesheet">
   <script src="https://assets.calendly.com/assets/external/widget.js" type="text/javascript"></script>
-<!-- Calendly badge widget end -->
+  <!-- Calendly badge widget end -->
 </head>
 
 <body>
- 
+
   <script>
     function formatDate_New(date) {
       // const h = "0" + date.getHours();
@@ -27,21 +27,21 @@
       var ampm = hours >= 12 ? 'PM' : 'AM';
       hours = hours % 12;
       hours = hours ? hours : 12; // the hour '0' should be '12'
-      minutes = minutes < 10 ? '0'+minutes : minutes;
+      minutes = minutes < 10 ? '0' + minutes : minutes;
       var strTime = hours + ':' + minutes + ' ' + ampm;
-      document.write( strTime)
+      document.write(strTime)
     }
-    setTimeout(function(){ document.getElementById("openBtn").click(); }, 3000);
+    setTimeout(function () { document.getElementById("openBtn").click(); }, 3000);
   </script>
   <!-- partial:index.partial.html -->
   <button class="open-button" id="openBtn" onclick="openForm()">Chat</button>
   <section class="msger" id="myForm">
     <header class="msger-header">
       <div class="msger-header-title">
-        <img class="msger-header-icon" src="{{url_for('static', filename='images/xAmplify.png')}}"/>
+        <img class="msger-header-icon" src="{{url_for('static', filename='images/xAmplify.png')}}" />
         <span> CHATBOT </span>
         <i class="msger-header-closeicon far fa-times-circle" onclick="closeForm()"></i>
-    </div>
+      </div>
     </header>
     <main class="msger-chat">
       <div class="msg left-msg">
@@ -49,7 +49,9 @@
         <div class="msg-bubble">
           <div class="msg-info">
             <div class="msg-info-name">ChatBot</div>
-            <div class="msg-info-time"><script> formatDate_New(new Date()); </script> </div>
+            <div class="msg-info-time">
+              <script> formatDate_New(new Date()); </script>
+            </div>
           </div>
           <div class="msg-text">
             Hi,How can we help?
@@ -62,13 +64,14 @@
         <!-- <button value="xAmplify" class="option-btn">xAmplify</button>
         <button value="Features"class="option-btn">Features</button>
         <button value="TCMA"class="option-btn">TCMA</button> -->
-        <button value="Request for demo" class="option-btn" onclick="Calendly.initPopupWidget({url: 'https://calendly.com/kjasmine/xamplify-demo'});return false;">
-            Request for demo
+        <button value="Request for demo" class="option-btn"
+          onclick="Calendly.initPopupWidget({url: 'https://calendly.com/kjasmine/xamplify-demo'});return false;">
+          Request for demo
         </button>
         <button value="Raise an issue" class="option-btn" id="myBtn">Raise an issue</button>
         <!-- Trigger/Open The Modal -->
       </div>
-      
+
     </div>
     <!-- The Modal -->
     <div id="myModal" class="modal">
@@ -76,7 +79,7 @@
       <!-- Modal content -->
       <div class="modal-content">
         <span class="close">&times;</span>
-        <form >
+        <form>
           <label for="fname">Full Name</label>
           <input class="modal-input-form" type="text" id="fname" name="firstname" placeholder="Your name..">
           <label for="lname">Email ID</label>
@@ -88,7 +91,7 @@
           <input class="modal-input-form" type="button" id="subbtn" value="Submit">
         </form>
       </div>
-    
+
     </div>
     <form class="msger-inputarea">
       <input type="text" class="msger-input" id="textInput" autocomplete="off" placeholder="Enter your message...">
@@ -101,33 +104,33 @@
   <script>
     // Get the modal
     var modal = document.getElementById("myModal");
-    
+
     // Get the <span> element that closes the modal
     var span = document.getElementsByClassName("close")[0];
-  
+
     // When the user clicks on <span> (x), close the modal
-    span.onclick = function() {
+    span.onclick = function () {
       modal.style.display = "none";
     }
-    
+
     // When the user clicks anywhere outside of the modal, close it
-    window.onclick = function(event) {
+    window.onclick = function (event) {
       if (event.target == modal) {
         modal.style.display = "none";
       }
     }
 
-  function openForm() {
-    document.getElementById("myForm").style.display = "block";
-    document.getElementById("openBtn").style.display = "none";
-    
-  }
+    function openForm() {
+      document.getElementById("myForm").style.display = "block";
+      document.getElementById("openBtn").style.display = "none";
 
-  function closeForm() {
-    document.getElementById("myForm").style.display = "none";
-    document.getElementById("openBtn").style.display = "block";
-    
-  }
+    }
+
+    function closeForm() {
+      document.getElementById("myForm").style.display = "none";
+      document.getElementById("openBtn").style.display = "block";
+
+    }
     const msgerForm = get(".msger-inputarea");
     const msgerInput = get(".msger-input");
     const msgerChat = get(".msger-chat");
@@ -138,49 +141,49 @@
     const BOT_NAME = "ChatBot";
     const PERSON_NAME = "You";
 
-    $(".option-btn").click(function() {
-        console.log(event.target.value)
-        var msgText;
-        // if(event.target.value == "xAmplify") {
-        //   msgText = "What is xAmplify?";
-        // } else if(event.target.value == "Features") {
-        //   msgText = "Features of xAmplify?";
-        // } else if(event.target.value == "TCMA") {
-        //   msgText = "What is TCMA?";
-        // if(event.target.value == "Request for demo"){
-        //   msgText = 'Please schedule a meeting'
-        //   // window.open('https://calendly.com/kjasmine/xamplify-demo','_blank');
-        // } else
-        
-         if(event.target.value == "Raise an issue") {
-          modal.style.display = "block";
-        }
-          
-        if(event.target.value != "Request for demo" && event.target.value != "Raise an issue") {
-          event.preventDefault();
-          appendMessage(PERSON_NAME, PERSON_IMG, "right", msgText);
-          msgerInput.value = "";
-          botResponse(msgText);
-        }
-        
+    $(".option-btn").click(function () {
+      console.log(event.target.value)
+      var msgText;
+      // if(event.target.value == "xAmplify") {
+      //   msgText = "What is xAmplify?";
+      // } else if(event.target.value == "Features") {
+      //   msgText = "Features of xAmplify?";
+      // } else if(event.target.value == "TCMA") {
+      //   msgText = "What is TCMA?";
+      // if(event.target.value == "Request for demo"){
+      //   msgText = 'Please schedule a meeting'
+      //   // window.open('https://calendly.com/kjasmine/xamplify-demo','_blank');
+      // } else
+
+      if (event.target.value == "Raise an issue") {
+        modal.style.display = "block";
+      }
+
+      if (event.target.value != "Request for demo" && event.target.value != "Raise an issue") {
+        event.preventDefault();
+        appendMessage(PERSON_NAME, PERSON_IMG, "right", msgText);
+        msgerInput.value = "";
+        botResponse(msgText);
+      }
+
     });
-    
-    $("#subbtn").click(function() {
+
+    $("#subbtn").click(function () {
       const emid = get("#emlid").value;
       var patt = /^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$/;
       var pattRes = patt.test(emid);
-      console.log("pattRes",pattRes);
+      console.log("pattRes", pattRes);
       if (pattRes) {
         const frstname = get("#fname").value;
         const summry = get("#summ").value;
         const descr = get("#desc").value;
-        $.get("/createjira", { summary: summry,description: descr,emailid: emid }).done(function (data) {
-          if(data.includes('XBI')){
-            appendMessage(BOT_NAME, BOT_IMG, "left", 'Your ticket no '+ data+' is created. Our support team will get back you.');
+        $.get("/createjira", { summary: summry, description: descr, emailid: emid }).done(function (data) {
+          if (data.includes('XBI')) {
+            appendMessage(BOT_NAME, BOT_IMG, "left", 'Your ticket no ' + data + ' is created. Our support team will get back you.');
           }
           modal.style.display = "none"
-      });
-      } else{
+        });
+      } else {
         alert("Please enter valid email id")
       }
     });
@@ -212,7 +215,26 @@
       msgerChat.insertAdjacentHTML("beforeend", msgHTML);
       msgerChat.scrollTop += 500;
     }
- 
+
+    function appendVideo(name, img, side, text) {
+      //   Simple solution for small apps
+      console.log('appendVideo')
+      const msgHTML = `
+            <div class="msg ${side}-msg">
+            <div class="msg-img" style="background-image: url(${img})"></div>
+            <div class="msg-bubble">
+                <div class="msg-info">
+                <div class="msg-info-name">${name}</div>
+                <div class="msg-info-time">${formatDate(new Date())}</div>
+                </div>
+                <iframe width="200" height="140" src="https://www.youtube.com/embed/eKbTQCyUSTc" frameborder="0" allowfullscreen> </iframe>
+            </div>
+            </div>
+            `;
+      msgerChat.insertAdjacentHTML("beforeend", msgHTML);
+      msgerChat.scrollTop += 500;
+    }
+
     function appendMessageCal(name, img, side, text) {
       //   Simple solution for small apps
       const msgHTML = `
@@ -233,19 +255,29 @@
       msgerChat.insertAdjacentHTML("beforeend", msgHTML);
       msgerChat.scrollTop += 500;
     }
+    
     function botResponse(rawText) {
       // Bot Response
       $.get("/chat-nltk", { msg: rawText }).done(function (data) {
         console.log(rawText);
         console.log(data);
         const msgText = data;
-        if(data.split('INITIAL').length === 2) {
-          appendMessage(BOT_NAME, BOT_IMG, "left", data.split('INITIAL')[0]);
-          appendMessage(BOT_NAME, BOT_IMG, "left", data.split('INITIAL')[1]);
-        } else if(data == 'calendly') {
-           appendMessageCal(BOT_NAME, BOT_IMG, "left", msgText);
+        console.log(data.split('[SPLIT_VIDEO]'))
+        if(data.split("[SPLIT_VIDEO]").length === 2) {
+          
+          if(data.split('[SPLIT_VIDEO]')[0] === "[Show Video]") {
+            console.log(data.split('[SPLIT_VIDEO]')[0])
+            appendVideo(BOT_NAME, BOT_IMG, "left", data.split('[SPLIT_VIDEO]')[0]);
+          } 
+          appendMessage(BOT_NAME, BOT_IMG, "left", data.split('[SPLIT_VIDEO]')[1]);
+        }
+        else if (data.split('[SPLIT]').length === 2) {
+          appendMessage(BOT_NAME, BOT_IMG, "left", data.split('[SPLIT]')[0]);
+          appendMessage(BOT_NAME, BOT_IMG, "left", data.split('[SPLIT]')[1]);
+        } else if (data == 'calendly') {
+          appendMessageCal(BOT_NAME, BOT_IMG, "left", msgText);
         } else {
-           appendMessage(BOT_NAME, BOT_IMG, "left", msgText);
+          appendMessage(BOT_NAME, BOT_IMG, "left", msgText);
         }
 
       });
@@ -266,7 +298,7 @@
       var ampm = hours >= 12 ? 'PM' : 'AM';
       hours = hours % 12;
       hours = hours ? hours : 12; // the hour '0' should be '12'
-      minutes = minutes < 10 ? '0'+minutes : minutes;
+      minutes = minutes < 10 ? '0' + minutes : minutes;
       var strTime = hours + ':' + minutes + ' ' + ampm;
       return strTime;
     }
@@ -275,20 +307,21 @@
   <script>
     function isCalendlyEvent(e) {
       return e.data.event &&
-            e.data.event.indexOf('calendly.event_scheduled') === 0;
-      };
-  
-      window.addEventListener(
-        'message',
-        function(e) {
-          console.log("event", e);
-          if (isCalendlyEvent(e)) {
-            appendMessage(BOT_NAME, BOT_IMG, "left", "Event has been scheduled, Please check your mail for details");
-          }
+        e.data.event.indexOf('calendly.event_scheduled') === 0;
+    };
+
+    window.addEventListener(
+      'message',
+      function (e) {
+        console.log("event", e);
+        if (isCalendlyEvent(e)) {
+          appendMessage(BOT_NAME, BOT_IMG, "left", "Event has been scheduled, Please check your mail for details");
         }
-      )
-  
+      }
+    )
+
   </script>
 
 </body>
+
 </html>
