@@ -4,7 +4,7 @@ from flask import Flask, render_template, request,session
 # from chatterbot import ChatBot
 # from chatterbot.trainers import ChatterBotCorpusTrainer
 import pickle
-# import psycopg2
+import psycopg2
 import re
 from jira.client import JIRA
 from flask import current_app
@@ -218,14 +218,14 @@ def get_response():
     if(res == 'None'):
         return 'Please provide more info'
     else:
-        # conn = psycopg2.connect(database="chatbotdb", user = "postgres", password = "postgres", host = 'localhost', port = "5432")
-        # cursor = conn.cursor()
-        # s= cursor.execute("INSERT INTO chathistry (user_mail_id,text,search_txt,persona,created_at) VALUES(%s, %s, %s, %s, %s)", (session['mail_id'], userText, userText, 'human', ts))
-        # s= cursor.execute("INSERT INTO chathistry (user_mail_id,text,resp_txt,persona,created_at) VALUES(%s, %s, %s, %s, %s) ", (session['mail_id'], res, res, 'bot',ts ))
-        # print('s',s)
-        # conn.commit() 
-        # cursor.close()
-        # conn.close()
+        conn = psycopg2.connect(database="chatbotdb", user = "postgres", password = "postgres", host = 'localhost', port = "5432")
+        cursor = conn.cursor()
+        s= cursor.execute("INSERT INTO chathistry (user_mail_id,text,search_txt,persona,created_at) VALUES(%s, %s, %s, %s, %s)", (session['mail_id'], userText, userText, 'human', ts))
+        s= cursor.execute("INSERT INTO chathistry (user_mail_id,text,resp_txt,persona,created_at) VALUES(%s, %s, %s, %s, %s) ", (session['mail_id'], res, res, 'bot',ts ))
+        print('s',s)
+        conn.commit() 
+        cursor.close()
+        conn.close()
         return res
 
 # @app.route("/chat-dl")
