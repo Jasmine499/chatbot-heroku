@@ -4,7 +4,7 @@ from flask import Flask, render_template, request,session
 # from chatterbot import ChatBot
 # from chatterbot.trainers import ChatterBotCorpusTrainer
 import pickle
-import psycopg2
+# import psycopg2
 import re
 from jira.client import JIRA
 from flask import current_app
@@ -199,33 +199,33 @@ def get_response():
     userText = request.args.get('msg')
     ts = datetime.datetime.now()
     print(session,session['count'], re.search(regex,userText))
-    if(session['count'] == 0 ):
-        print("mail id is entered")
-        session['mail_id'] = userText 
-        session['count'] = 1
-        return 'Hi! Before we get started I have a few questions for you. First, we’ll need your email address in case we need to follow up with you about your question [SPLIT] Please enter your email'
-    elif(session['count'] == 1 and re.search(regex,userText)):
-        session['count'] = 2
-        return 'Hi! My name is Jasmine, how can I help you today? [SPLIT] What is your name?'
-    elif(session['count'] == 1 and re.search(regex,userText) == None ):
-        return 'Please enter valid email id'
-    elif(session['count'] == 2):
-        session['count'] = 3
-        session['name'] = userText
-        return 'Welcome to xAmplify '+ userText+ ', how can we assist you today?'
+    # if(session['count'] == 0 ):
+    #     print("mail id is entered")
+    #     session['mail_id'] = userText 
+    #     session['count'] = 1
+    #     return 'Hi! Before we get started I have a few questions for you. First, we’ll need your email address in case we need to follow up with you about your question [SPLIT] Please enter your email'
+    # elif(session['count'] == 1 and re.search(regex,userText)):
+    #     session['count'] = 2
+    #     return 'Hi! My name is Jasmine, how can I help you today? [SPLIT] What is your name?'
+    # elif(session['count'] == 1 and re.search(regex,userText) == None ):
+    #     return 'Please enter valid email id'
+    # elif(session['count'] == 2):
+    #     session['count'] = 3
+    #     session['name'] = userText
+    #     return 'Welcome to xAmplify '+ userText+ ', how can we assist you today?'
 
     res= str(model_nltk.respond(userText))
     if(res == 'None'):
         return 'Please provide more info'
     else:
-        conn = psycopg2.connect(database="chatbotdb", user = "postgres", password = "postgres", host = 'localhost', port = "5432")
-        cursor = conn.cursor()
-        s= cursor.execute("INSERT INTO chathistry (user_mail_id,text,search_txt,persona,created_at) VALUES(%s, %s, %s, %s, %s)", (session['mail_id'], userText, userText, 'human', ts))
-        s= cursor.execute("INSERT INTO chathistry (user_mail_id,text,resp_txt,persona,created_at) VALUES(%s, %s, %s, %s, %s) ", (session['mail_id'], res, res, 'bot',ts ))
-        print('s',s)
-        conn.commit() 
-        cursor.close()
-        conn.close()
+        # conn = psycopg2.connect(database="chatbotdb", user = "postgres", password = "postgres", host = 'localhost', port = "5432")
+        # cursor = conn.cursor()
+        # s= cursor.execute("INSERT INTO chathistry (user_mail_id,text,search_txt,persona,created_at) VALUES(%s, %s, %s, %s, %s)", (session['mail_id'], userText, userText, 'human', ts))
+        # s= cursor.execute("INSERT INTO chathistry (user_mail_id,text,resp_txt,persona,created_at) VALUES(%s, %s, %s, %s, %s) ", (session['mail_id'], res, res, 'bot',ts ))
+        # print('s',s)
+        # conn.commit() 
+        # cursor.close()
+        # conn.close()
         return res
 
 # @app.route("/chat-dl")

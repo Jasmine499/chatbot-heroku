@@ -119,20 +119,21 @@
 
     function getCookie() {
       var decodedCookie = decodeURIComponent(document.cookie);
-      if (decodedCookie) {
-        var ca = decodedCookie.split(';');
-        for(var i = 0; i <ca.length; i++) {
-          var c = ca[i];
-          chatArray = c.split('=');
+      var ca = decodedCookie.split(';');
+      for(var i = 0; i <ca.length; i++) {
+        var c = ca[i];
+        chatArray = c.split('=');
+       
+        var data = chatArray[1]
+        if(data && chatArray[0] != 'count') {
           appendMessage(PERSON_NAME, PERSON_IMG, "right", chatArray[0]);
-          var data = chatArray[1]
           if(data.split("[SPLIT_VIDEO]").length === 2) {
-            
-            if(data.split('[SPLIT_VIDEO]')[0] === "[Show Video]") {
-              console.log(data.split('[SPLIT_VIDEO]')[0])
-              appendVideo(BOT_NAME, BOT_IMG, "left", data.split('[SPLIT_VIDEO]')[0]);
-            } 
-            appendMessage(BOT_NAME, BOT_IMG, "left", data.split('[SPLIT_VIDEO]')[1]);
+          
+          if(data.split('[SPLIT_VIDEO]')[0] === "[Show Video]") {
+            console.log(data.split('[SPLIT_VIDEO]')[0])
+            appendVideo(BOT_NAME, BOT_IMG, "left", data.split('[SPLIT_VIDEO]')[0]);
+          } 
+          appendMessage(BOT_NAME, BOT_IMG, "left", data.split('[SPLIT_VIDEO]')[1]);
           }
           else if (data.split('[SPLIT]').length === 2) {
             appendMessage(BOT_NAME, BOT_IMG, "left", data.split('[SPLIT]')[0]);
@@ -142,7 +143,23 @@
           } else {
             appendMessage(BOT_NAME, BOT_IMG, "left", data);
           }
-          
+        }
+        
+      }
+      return "";
+    }
+
+    function getCookieByname(cname) {
+      var name = cname + "=";
+      var decodedCookie = decodeURIComponent(document.cookie);
+      var ca = decodedCookie.split(';');
+      for(var i = 0; i <ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0) == ' ') {
+          c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) {
+          return c.substring(name.length, c.length);
         }
       }
       return "";
@@ -298,28 +315,47 @@
     function botResponse(rawText) {
       // Bot Response
       $.get("/chat-nltk", { msg: rawText }).done(function (data) {
-        console.log(rawText);
-        console.log(data);
-        const msgText = data;
-        console.log(data.split('[SPLIT_VIDEO]'))
-        if(data.split("[SPLIT_VIDEO]").length === 2) {
+
+        var count = getCookieByname("count");
+        let msgText;
+        console.log("getCookieByname",count, count.length)
+        msgText = data;
+        if(count.length === 0 ) {
+           setCookie("count", 1, 2)
+           msgText = "Hi! Before we get started I have a few questions for you. First, we’ll need your email address in case we need to follow up with you about your question [SPLIT] Please enter your email"
+        } else if(count == 1 && validateEmail(rawText)) {
+          setCookie("count", 2, 2)
+          msgText = 'Hi! My name is Jasmine, how can I help you today? [SPLIT] What is your name?';
+        } else if( count == 1 && !validateEmail(rawText)) {
+          msgText = 'Please enter valid email id';
+        } else if( count == 2) {
+          setCookie("count", 3, 2)
+          msgText = 'Welcome to xAmplify '+ rawText+ ', how can we assist you today?';
+        } 
+        console.log(msgText.split('[SPLIT_VIDEO]'))
+        if(msgText.split("[SPLIT_VIDEO]").length === 2) {
           
-          if(data.split('[SPLIT_VIDEO]')[0] === "[Show Video]") {
-            console.log(data.split('[SPLIT_VIDEO]')[0])
-            appendVideo(BOT_NAME, BOT_IMG, "left", data.split('[SPLIT_VIDEO]')[0]);
+          if(msgText.split('[SPLIT_VIDEO]')[0] === "[Show Video]") {
+            console.log(msgText.split('[SPLIT_VIDEO]')[0])
+            appendVideo(BOT_NAME, BOT_IMG, "left", msgText.split('[SPLIT_VIDEO]')[0]);
           } 
-          appendMessage(BOT_NAME, BOT_IMG, "left", data.split('[SPLIT_VIDEO]')[1]);
+          appendMessage(BOT_NAME, BOT_IMG, "left", msgText.split('[SPLIT_VIDEO]')[1]);
         }
-        else if (data.split('[SPLIT]').length === 2) {
-          appendMessage(BOT_NAME, BOT_IMG, "left", data.split('[SPLIT]')[0]);
-          appendMessage(BOT_NAME, BOT_IMG, "left", data.split('[SPLIT]')[1]);
-        } else if (data == 'calendly') {
+        else if (msgText.split('[SPLIT]').length === 2) {
+          appendMessage(BOT_NAME, BOT_IMG, "left", msgText.split('[SPLIT]')[0]);
+          appendMessage(BOT_NAME, BOT_IMG, "left", msgText.split('[SPLIT]')[1]);
+        } else if (msgText == 'calendly') {
           appendMessageCal(BOT_NAME, BOT_IMG, "left", msgText);
         } else {
           appendMessage(BOT_NAME, BOT_IMG, "left", msgText);
         }
         setCookie(rawText,msgText, 2)
       });
+    }
+
+    function validateEmail(email) {
+      const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+      return re.test(String(email).toLowerCase());
     }
 
     function setCookie(cname, cvalue, exdays) {
