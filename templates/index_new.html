@@ -305,8 +305,17 @@
           msgText = 'Welcome to xAmplify ' + rawText + ', how can we assist you today?';
           appendMessage(BOT_NAME, BOT_IMG, "left", msgText);
         } else {
-          $.get("/save-in-db", { userText: rawText, msg: msgText, mail: getCookieByname('chatbot:mail') })
-          appendMessage(BOT_NAME, BOT_IMG, "left", msgText);
+          if(msgText.split("[SPLIT_VIDEO]").length === 2) {
+            if(msgText.split('[SPLIT_VIDEO]')[0] === "[Show Video]") {
+              console.log(msgText.split('[SPLIT_VIDEO]')[0])
+              appendVideo(BOT_NAME, BOT_IMG, "left", msgText.split('[SPLIT_VIDEO]')[0]);
+            } 
+            appendMessage(BOT_NAME, BOT_IMG, "left", msgText.split('[SPLIT_VIDEO]')[1]);
+          }
+          else {
+            $.get("/save-in-db", { userText: rawText, msg: msgText, mail: getCookieByname('chatbot:mail') })
+            appendMessage(BOT_NAME, BOT_IMG, "left", msgText);
+          }
         }
         setCookie(rawText, msgText, 2)
       });
