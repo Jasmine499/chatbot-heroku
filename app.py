@@ -235,7 +235,6 @@ def save_db():
     cursor.close()
     conn.close()
     return {}
-    
 # @app.route("/chat-dl")
 # def get_response_dl():
 #     userText = request.args.get('msg')

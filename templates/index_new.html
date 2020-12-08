@@ -31,13 +31,7 @@
       var strTime = hours + ':' + minutes + ' ' + ampm;
       document.write(strTime)
     }
-    setTimeout(function () { 
-      document.getElementById("openBtn").click(); 
-      var objDiv = document.getElementById("msger-chat");
-      console.log('objDiv', objDiv.scrollHeight)
-      objDiv.scrollTop = objDiv.scrollHeight;
-      msgerChat.scrollTop += 500;
-      }, 3000);
+
 
 
   </script>
@@ -111,7 +105,7 @@
 
   <script>
 
-    
+
     // Icons made by Freepik from www.flaticon.com
     const BOT_IMG = "https://image.flaticon.com/icons/svg/327/327779.svg";
     const PERSON_IMG = "https://image.flaticon.com/icons/svg/145/145867.svg";
@@ -126,20 +120,20 @@
     function getCookie() {
       var decodedCookie = decodeURIComponent(document.cookie);
       var ca = decodedCookie.split(';');
-      for(var i = 0; i <ca.length; i++) {
+      for (var i = 0; i < ca.length; i++) {
         var c = ca[i];
         chatArray = c.split('=');
-       
+
         var data = chatArray[1]
-        if(data && chatArray[0] != 'count') {
-          appendMessage(PERSON_NAME, PERSON_IMG, "right", chatArray[0]);
-          if(data.split("[SPLIT_VIDEO]").length === 2) {
-          
-          if(data.split('[SPLIT_VIDEO]')[0] === "[Show Video]") {
-            console.log(data.split('[SPLIT_VIDEO]')[0])
-            appendVideo(BOT_NAME, BOT_IMG, "left", data.split('[SPLIT_VIDEO]')[0]);
-          } 
-          appendMessage(BOT_NAME, BOT_IMG, "left", data.split('[SPLIT_VIDEO]')[1]);
+        if (data && chatArray[0] != 'chatbot:count' && chatArray[0].includes('chatbot:')) {
+          appendMessage(PERSON_NAME, PERSON_IMG, "right", chatArray[0].split(':')[1]);
+          if (data.split("[SPLIT_VIDEO]").length === 2) {
+
+            if (data.split('[SPLIT_VIDEO]')[0] === "[Show Video]") {
+              console.log(data.split('[SPLIT_VIDEO]')[0])
+              appendVideo(BOT_NAME, BOT_IMG, "left", data.split('[SPLIT_VIDEO]')[0]);
+            }
+            appendMessage(BOT_NAME, BOT_IMG, "left", data.split('[SPLIT_VIDEO]')[1]);
           }
           else if (data.split('[SPLIT]').length === 2) {
             appendMessage(BOT_NAME, BOT_IMG, "left", data.split('[SPLIT]')[0]);
@@ -148,7 +142,7 @@
             appendMessage(BOT_NAME, BOT_IMG, "left", data);
           }
         }
-        
+
       }
       return "";
     }
@@ -157,7 +151,7 @@
       var name = cname + "=";
       var decodedCookie = decodeURIComponent(document.cookie);
       var ca = decodedCookie.split(';');
-      for(var i = 0; i <ca.length; i++) {
+      for (var i = 0; i < ca.length; i++) {
         var c = ca[i];
         while (c.charAt(0) == ' ') {
           c = c.substring(1);
@@ -228,7 +222,7 @@
         const descr = get("#desc").value;
         $.get("/createjira", { summary: summry, description: descr, emailid: emid }).done(function (data) {
           if (data.includes('XBI')) {
-            $.get("/save-in-db", { userText: 'JIRA', msg:  'Your ticket no ' + data + ' is created. Our support team will get back you.', mail: getCookieByname('mail')})
+            $.get("/save-in-db", { userText: 'JIRA', msg: 'Your ticket no ' + data + ' is created. Our support team will get back you.', mail: getCookieByname('chatbot:mail') })
             appendMessage(BOT_NAME, BOT_IMG, "left", 'Your ticket no ' + data + ' is created. Our support team will get back you.');
           }
           modal.style.display = "none"
@@ -283,38 +277,38 @@
       msgerChat.insertAdjacentHTML("beforeend", msgHTML);
       msgerChat.scrollTop += 500;
     }
-    
+
     function botResponse(rawText) {
       // Bot Response
       $.get("/chat-nltk", { msg: rawText }).done(function (data) {
 
-        var count = getCookieByname("count");
+        var count = getCookieByname("chatbot:count");
         let msgText;
-        console.log("getCookieByname",count, count.length)
+        console.log("getCookieByname", count, count.length)
         msgText = data;
-        if(count.length === 0 ) {
-           setCookie("count", 1, 2)
-           msgText = "Hi! Before we get started I have a few questions for you. First, we’ll need your email address in case we need to follow up with you about your question [SPLIT] Please enter your email"
-           appendMessage(BOT_NAME, BOT_IMG, "left", msgText.split('[SPLIT]')[0]);
-           appendMessage(BOT_NAME, BOT_IMG, "left", msgText.split('[SPLIT]')[1]);
-        } else if(count == 1 && validateEmail(rawText)) {
+        if (count.length === 0) {
+          setCookie("count", 1, 2)
+          msgText = "Hi! Before we get started I have a few questions for you. First, we’ll need your email address in case we need to follow up with you about your question [SPLIT] Please enter your email"
+          appendMessage(BOT_NAME, BOT_IMG, "left", msgText.split('[SPLIT]')[0]);
+          appendMessage(BOT_NAME, BOT_IMG, "left", msgText.split('[SPLIT]')[1]);
+        } else if (count == 1 && validateEmail(rawText)) {
           setCookie("count", 2, 2)
           setCookie("mail", rawText, 2)
           msgText = 'Hi! My name is Jasmine, how can I help you today? [SPLIT] What is your name?';
           appendMessage(BOT_NAME, BOT_IMG, "left", msgText.split('[SPLIT]')[0]);
           appendMessage(BOT_NAME, BOT_IMG, "left", msgText.split('[SPLIT]')[1]);
-        } else if( count == 1 && !validateEmail(rawText)) {
+        } else if (count == 1 && !validateEmail(rawText)) {
           msgText = 'Please enter valid email id';
           appendMessage(BOT_NAME, BOT_IMG, "left", msgText);
-        } else if( count == 2) {
+        } else if (count == 2) {
           setCookie("count", 3, 2)
-          msgText = 'Welcome to xAmplify '+ rawText+ ', how can we assist you today?';
+          msgText = 'Welcome to xAmplify ' + rawText + ', how can we assist you today?';
           appendMessage(BOT_NAME, BOT_IMG, "left", msgText);
         } else {
-          $.get("/save-in-db", { userText: rawText, msg:  msgText, mail: getCookieByname('mail')})
+          $.get("/save-in-db", { userText: rawText, msg: msgText, mail: getCookieByname('chatbot:mail') })
           appendMessage(BOT_NAME, BOT_IMG, "left", msgText);
         }
-        setCookie(rawText,msgText, 2)
+        setCookie(rawText, msgText, 2)
       });
     }
 
@@ -325,9 +319,9 @@
 
     function setCookie(cname, cvalue, exdays) {
       var d = new Date();
-      d.setTime(d.getTime() + (exdays*24*60*60*1000));
-      var expires = "expires="+ d.toUTCString();
-      document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+      d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+      var expires = "expires=" + d.toUTCString();
+      document.cookie = 'chatbot:' + cname + "=" + cvalue + ";" + expires + ";path=/";
     }
 
     // Utils
@@ -362,12 +356,19 @@
       function (e) {
         console.log("event", e);
         if (isCalendlyEvent(e)) {
-          $.get("/save-in-db", { userText: 'Calendly', msg:  'Event has been scheduled, Please check your mail for details', mail: getCookieByname('mail')})
+          $.get("/save-in-db", { userText: 'Calendly', msg: 'Event has been scheduled, Please check your mail for details', mail: getCookieByname('chatbot:mail') })
           appendMessage(BOT_NAME, BOT_IMG, "left", "Event has been scheduled, Please check your mail for details");
         }
       }
     )
 
+    setTimeout(function () {
+      document.getElementById("openBtn").click();
+      var objDiv = document.getElementById("msger-chat");
+      console.log('objDiv', objDiv.scrollHeight)
+      objDiv.scrollTop = objDiv.scrollHeight;
+      msgerChat.scrollTop += 500;
+    }, 3000);
   </script>
 
 </body>
