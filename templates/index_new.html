@@ -31,7 +31,13 @@
       var strTime = hours + ':' + minutes + ' ' + ampm;
       document.write(strTime)
     }
-    setTimeout(function () { document.getElementById("openBtn").click(); }, 3000);
+    setTimeout(function () { 
+      document.getElementById("openBtn").click(); 
+      var objDiv = document.getElementById("msger-chat");
+      console.log('objDiv', objDiv.scrollHeight)
+      objDiv.scrollTop = objDiv.scrollHeight;
+      msgerChat.scrollTop += 500;
+      }, 3000);
 
 
   </script>
@@ -45,7 +51,7 @@
         <i class="msger-header-closeicon far fa-times-circle" onclick="closeForm()"></i>
       </div>
     </header>
-    <main class="msger-chat">
+    <main class="msger-chat" id="msger-chat">
       <div class="msg left-msg">
         <div class="msg-img" style="background-image: url(https://image.flaticon.com/icons/svg/327/327779.svg)"></div>
         <div class="msg-bubble">
@@ -362,7 +368,7 @@
       var d = new Date();
       d.setTime(d.getTime() + (exdays*24*60*60*1000));
       var expires = "expires="+ d.toUTCString();
-      document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+      document.cookie = cname + "=" + cvalue + ";path=/";
     }
 
     // Utils
