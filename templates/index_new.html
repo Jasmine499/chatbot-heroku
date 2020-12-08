@@ -96,7 +96,7 @@
           <input class="modal-input-form" type="text" id="summ" name="Summary" placeholder="Write..">
           <label for="desc">Description</label>
           <input class="modal-input-form" type="text" id="desc" name="Description" placeholder="Write..">
-          <input class="modal-input-form" type="button" id="subbtn" value="Submit">
+          <input class="modal-input-form" type="button" id="jirabtn" value="Submit">
         </form>
       </div>
 
@@ -144,8 +144,6 @@
           else if (data.split('[SPLIT]').length === 2) {
             appendMessage(BOT_NAME, BOT_IMG, "left", data.split('[SPLIT]')[0]);
             appendMessage(BOT_NAME, BOT_IMG, "left", data.split('[SPLIT]')[1]);
-          } else if (data == 'calendly') {
-            appendMessageCal(BOT_NAME, BOT_IMG, "left", data);
           } else {
             appendMessage(BOT_NAME, BOT_IMG, "left", data);
           }
@@ -206,17 +204,6 @@
     $(".option-btn").click(function () {
       console.log(event.target.value)
       var msgText;
-      // if(event.target.value == "xAmplify") {
-      //   msgText = "What is xAmplify?";
-      // } else if(event.target.value == "Features") {
-      //   msgText = "Features of xAmplify?";
-      // } else if(event.target.value == "TCMA") {
-      //   msgText = "What is TCMA?";
-      // if(event.target.value == "Request for demo"){
-      //   msgText = 'Please schedule a meeting'
-      //   // window.open('https://calendly.com/kjasmine/xamplify-demo','_blank');
-      // } else
-
       if (event.target.value == "Raise an issue") {
         modal.style.display = "block";
       }
@@ -230,7 +217,7 @@
 
     });
 
-    $("#subbtn").click(function () {
+    $("#jirabtn").click(function () {
       const emid = get("#emlid").value;
       var patt = /^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$/;
       var pattRes = patt.test(emid);
@@ -241,6 +228,7 @@
         const descr = get("#desc").value;
         $.get("/createjira", { summary: summry, description: descr, emailid: emid }).done(function (data) {
           if (data.includes('XBI')) {
+            $.get("/save-in-db", { userText: 'JIRA', msg:  'Your ticket no ' + data + ' is created. Our support team will get back you.', mail: getCookieByname('mail')})
             appendMessage(BOT_NAME, BOT_IMG, "left", 'Your ticket no ' + data + ' is created. Our support team will get back you.');
           }
           modal.style.display = "none"
@@ -280,7 +268,6 @@
 
     function appendVideo(name, img, side, text) {
       //   Simple solution for small apps
-      console.log('appendVideo')
       const msgHTML = `
             <div class="msg ${side}-msg">
             <div class="msg-img" style="background-image: url(${img})"></div>
@@ -290,27 +277,6 @@
                 <div class="msg-info-time">${formatDate(new Date())}</div>
                 </div>
                 <iframe width="200" height="140" src="https://www.youtube.com/embed/eKbTQCyUSTc" frameborder="0" allowfullscreen> </iframe>
-            </div>
-            </div>
-            `;
-      msgerChat.insertAdjacentHTML("beforeend", msgHTML);
-      msgerChat.scrollTop += 500;
-    }
-
-    function appendMessageCal(name, img, side, text) {
-      //   Simple solution for small apps
-      const msgHTML = `
-            <div class="msg ${side}-msg">
-            <div class="msg-img" style="background-image: url(${img})"></div>
-            <div class="msg-bubble">
-                <div class="msg-info">
-                <div class="msg-info-name">${name}</div>
-                <div class="msg-info-time">${formatDate(new Date())}</div>
-                </div>
-
-                <div class="msg-text">
-                  Please click <a href="" onclick="Calendly.initPopupWidget({url: 'https://calendly.com/kjasmine/xamplify-demo'});return false;"> here </a> to book a slot for demo
-                </div>
             </div>
             </div>
             `;
@@ -329,30 +295,23 @@
         if(count.length === 0 ) {
            setCookie("count", 1, 2)
            msgText = "Hi! Before we get started I have a few questions for you. First, we’ll need your email address in case we need to follow up with you about your question [SPLIT] Please enter your email"
+           appendMessage(BOT_NAME, BOT_IMG, "left", msgText.split('[SPLIT]')[0]);
+           appendMessage(BOT_NAME, BOT_IMG, "left", msgText.split('[SPLIT]')[1]);
         } else if(count == 1 && validateEmail(rawText)) {
           setCookie("count", 2, 2)
+          setCookie("mail", rawText, 2)
           msgText = 'Hi! My name is Jasmine, how can I help you today? [SPLIT] What is your name?';
+          appendMessage(BOT_NAME, BOT_IMG, "left", msgText.split('[SPLIT]')[0]);
+          appendMessage(BOT_NAME, BOT_IMG, "left", msgText.split('[SPLIT]')[1]);
         } else if( count == 1 && !validateEmail(rawText)) {
           msgText = 'Please enter valid email id';
+          appendMessage(BOT_NAME, BOT_IMG, "left", msgText);
         } else if( count == 2) {
           setCookie("count", 3, 2)
           msgText = 'Welcome to xAmplify '+ rawText+ ', how can we assist you today?';
-        } 
-        console.log(msgText.split('[SPLIT_VIDEO]'))
-        if(msgText.split("[SPLIT_VIDEO]").length === 2) {
-          
-          if(msgText.split('[SPLIT_VIDEO]')[0] === "[Show Video]") {
-            console.log(msgText.split('[SPLIT_VIDEO]')[0])
-            appendVideo(BOT_NAME, BOT_IMG, "left", msgText.split('[SPLIT_VIDEO]')[0]);
-          } 
-          appendMessage(BOT_NAME, BOT_IMG, "left", msgText.split('[SPLIT_VIDEO]')[1]);
-        }
-        else if (msgText.split('[SPLIT]').length === 2) {
-          appendMessage(BOT_NAME, BOT_IMG, "left", msgText.split('[SPLIT]')[0]);
-          appendMessage(BOT_NAME, BOT_IMG, "left", msgText.split('[SPLIT]')[1]);
-        } else if (msgText == 'calendly') {
-          appendMessageCal(BOT_NAME, BOT_IMG, "left", msgText);
+          appendMessage(BOT_NAME, BOT_IMG, "left", msgText);
         } else {
+          $.get("/save-in-db", { userText: rawText, msg:  msgText, mail: getCookieByname('mail')})
           appendMessage(BOT_NAME, BOT_IMG, "left", msgText);
         }
         setCookie(rawText,msgText, 2)
@@ -368,7 +327,7 @@
       var d = new Date();
       d.setTime(d.getTime() + (exdays*24*60*60*1000));
       var expires = "expires="+ d.toUTCString();
-      document.cookie = cname + "=" + cvalue + ";path=/";
+      document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
     }
 
     // Utils
@@ -403,6 +362,7 @@
       function (e) {
         console.log("event", e);
         if (isCalendlyEvent(e)) {
+          $.get("/save-in-db", { userText: 'Calendly', msg:  'Event has been scheduled, Please check your mail for details', mail: getCookieByname('mail')})
           appendMessage(BOT_NAME, BOT_IMG, "left", "Event has been scheduled, Please check your mail for details");
         }
       }

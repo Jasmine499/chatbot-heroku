@@ -199,6 +199,7 @@ def get_response():
     userText = request.args.get('msg')
     ts = datetime.datetime.now()
     print(session,session['count'], re.search(regex,userText))
+    
     # if(session['count'] == 0 ):
     #     print("mail id is entered")
     #     session['mail_id'] = userText 
@@ -218,16 +219,23 @@ def get_response():
     if(res == 'None'):
         return 'Please provide more info'
     else:
-        conn = psycopg2.connect(database="chatbotdb", user = "postgres", password = "postgres", host = 'localhost', port = "5432")
-        cursor = conn.cursor()
-        s= cursor.execute("INSERT INTO chathistry (user_mail_id,text,search_txt,persona,created_at) VALUES(%s, %s, %s, %s, %s)", (session['mail_id'], userText, userText, 'human', ts))
-        s= cursor.execute("INSERT INTO chathistry (user_mail_id,text,resp_txt,persona,created_at) VALUES(%s, %s, %s, %s, %s) ", (session['mail_id'], res, res, 'bot',ts ))
-        print('s',s)
-        conn.commit() 
-        cursor.close()
-        conn.close()
         return res
 
+@app.route("/save-in-db")        
+def save_db():
+    userText = request.args.get('userText')
+    res = request.args.get('msg')
+    ts = datetime.datetime.now()
+    conn = psycopg2.connect(database="chatbotdb", user = "postgres", password = "postgres", host = 'localhost', port = "5432")
+    cursor = conn.cursor()
+    s= cursor.execute("INSERT INTO chathistry (user_mail_id,text,search_txt,persona,created_at) VALUES(%s, %s, %s, %s, %s)", (request.args.get('mail'), userText, userText, 'human', ts))
+    s= cursor.execute("INSERT INTO chathistry (user_mail_id,text,resp_txt,persona,created_at) VALUES(%s, %s, %s, %s, %s) ", (request.args.get('mail'), res, res, 'bot',ts ))
+    print('s',s)
+    conn.commit() 
+    cursor.close()
+    conn.close()
+    return {}
+    
 # @app.route("/chat-dl")
 # def get_response_dl():
 #     userText = request.args.get('msg')
