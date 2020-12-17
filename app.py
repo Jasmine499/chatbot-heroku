@@ -221,10 +221,12 @@ def get_response():
     else:
         return res
 
-@app.route("/save-in-db")        
+@app.route("/save-in-db")     
 def save_db():
     userText = request.args.get('userText')
     res = request.args.get('msg')
+    print('res',res)
+    print('mail',request.args.get('mail'))
     ts = datetime.datetime.now()
     conn = psycopg2.connect(database="chatbotdb", user = "postgres", password = "postgres", host = 'localhost', port = "5432")
     cursor = conn.cursor()
