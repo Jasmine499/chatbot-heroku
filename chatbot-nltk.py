@@ -193,8 +193,9 @@ set_pairs = [
       "calendly"
     ]
   ],
+  
   [
-    "quit",
+    "Bye",
     [
       "Bye take care. See you soon :) ",
       "It was nice talking to you. See you soon :)"
