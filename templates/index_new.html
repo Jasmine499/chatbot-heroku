@@ -381,14 +381,14 @@
 
     function deleteAllCookies() {
       var cookies = document.cookie.split(";");
-          console.log("delete");
-          for (var i = 0; i < cookies.length; i++) {
-              var cookie = cookies[i];
-              var eqPos = cookie.indexOf("=");
-              var name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
-              document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
-          }
-          window.location.reload(true)
+      console.log("delete");
+      for (var i = 0; i < cookies.length; i++) {
+          var cookie = cookies[i];
+          var eqPos = cookie.indexOf("=");
+          var name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+          document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
+      }
+      window.location.reload(true)
     }
     var inactivityTime = function () {
       var time;
@@ -402,9 +402,9 @@
         //location.href = 'logout.html'
       }
 
-      function resetTimer() {
+    function resetTimer() {
         clearTimeout(time);
-        time = setTimeout(logout, 900000)
+        time = setTimeout(logout, 60000)
         // 1000 milliseconds = 1 second
       }
     };
@@ -417,7 +417,7 @@
       //deleteAllCookies();
     };
 
-    window.addEventListener('load', resetTimer, true);
+    // window.addEventListener('load', resetTimer, true);
     var events = ['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart'];
     events.forEach(function (name) {
       document.addEventListener(name, resetTimer, true);
